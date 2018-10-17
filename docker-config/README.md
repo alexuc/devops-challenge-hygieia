@@ -20,7 +20,8 @@ These are the commands needed to mount Jenkins in a new container running in the
 `sudo docker stack deploy -c jenkins.yml jenkins`
 
 Contents of jenkins.yml:
-```version: '3'
+```
+version: '3'
 services:
 main:
  image: jenkinsci/jenkins:${TAG:-lts-alpine}
@@ -45,7 +46,8 @@ To obtain the admin initial password:
 
 5. Create the service that binds each node/container to the master in Jenkins
 
-```docker service create \
+```
+docker service create \
     --mode=global \
     --name jenkins-swarm-agent \
     -e LABELS=docker-prod \
