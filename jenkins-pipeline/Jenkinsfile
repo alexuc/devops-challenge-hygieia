@@ -1,0 +1,41 @@
+def CONTAINER_NAME="jenkins-pipeline"
+def CONTAINER_TAG="latest"
+def DOCKER_HUB_USER="alexuc"
+def HTTP_PORT="3000"
+
+node {
+
+    stage('Initialize'){
+        def dockerHome = tool 'docker'
+        def mavenHome  = tool 'maven3'
+        env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
+    }
+
+    stage('Checkout') {
+        checkout scm
+    }
+
+    stage('Build'){
+        sh "mvn clean install"
+    }
+
+    stage('Image Build'){
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+    }
+
+    stage('Run App'){
+        runApp(CONTAINER_NAME, CONTAINER_TAG, DOCKER_HUB_USER, HTTP_PORT)
+    }
+
+}
+
+def imageBuild(containerName, tag){
+    sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
+    echo "Image build complete"
+}
+
+def runApp(containerName, tag, dockerHubUser, httpPort){
+    sh "docker pull $dockerHubUser/$containerName"
+    sh "docker run -d --rm -p $httpPort:$httpPort --name $containerName $dockerHubUser/$containerName:$tag"
+    echo "Application started on http port: ${httpPort}"
+}
