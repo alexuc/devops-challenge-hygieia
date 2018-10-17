@@ -14,7 +14,7 @@ The commands used are:
 `docker swarm join --token SWMTKN-1-1rykrfjdtibhls5mambi6y57sf9hccap71iv6sop9q96qwbc8i-8nwfnbjge754lur2p7guimzkj 172.31.20.197:2377`
 
 
-##Other 1-time steps to setup Jenkins:
+## Other 1-time steps to setup Jenkins:
 These are the commands needed to mount Jenkins in a new container running in the master:
 1. Deploy a brand new Jenkins instance
 `sudo docker stack deploy -c jenkins.yml jenkins`
