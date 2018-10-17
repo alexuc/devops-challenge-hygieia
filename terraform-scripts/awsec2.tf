@@ -13,8 +13,8 @@ variable "chef_provision" {
 }
 
 provider "aws" {
-  access_key = "AKIAJII5NCFN5QUJBR6A"
-  secret_key = "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"
+  access_key = "--------------------"
+  secret_key = "--------------------"
   region     = "us-west-2"
 }
 
