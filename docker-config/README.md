@@ -20,7 +20,7 @@ These are the commands needed to mount Jenkins in a new container running in the
 `sudo docker stack deploy -c jenkins.yml jenkins`
 
 Contents of jenkins.yml:
-`version: '3'
+```version: '3'
 services:
 main:
  image: jenkinsci/jenkins:${TAG:-lts-alpine}
@@ -28,24 +28,29 @@ main:
  - ${UI_PORT:-8080}:8080
  - ${AGENTS_PORT:-50000}:50000
  environment:
- - JENKINS_OPTS="--prefix=/jenkins"`
+ - JENKINS_OPTS="--prefix=/jenkins"
+```
 
 2. Create a secret to authorize Jenkins nodes 
+
 `sudo echo "-master http://172.31.20.197:8080/jenkins -password PASS -username USER"| sudo docker secret create jenkins-v1 -`
 
 3. Login to Jenkins (http://swarm-master-ip:8080/jenkins) and complete the initial setup. Install all recommended plugins + Self-Organizing Swarm Plug-in Modules.
 
 To obtain the admin initial password:
+
 `docker service logs jenkins_main`
 
 4. Configure Maven and Docker in Global tools settings.
 
 5. Create the service that binds each node/container to the master in Jenkins
-`docker service create \
+
+```docker service create \
     --mode=global \
     --name jenkins-swarm-agent \
     -e LABELS=docker-prod \
     --mount "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock" \
     --mount "type=bind,source=/tmp/,target=/tmp/" \
     --secret source=jenkins-v1,target=jenkins \
-    vfarcic/jenkins-swarm-agent`
+    vfarcic/jenkins-swarm-agent
+```
